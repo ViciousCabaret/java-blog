@@ -17,6 +17,7 @@ import wsb.studenci.blog.service.AccessTokenService;
 import wsb.studenci.blog.service.AuthenticationService;
 import wsb.studenci.blog.service.LoginService;
 import wsb.studenci.blog.service.RegisterService;
+import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
 
 import java.util.HashMap;
 

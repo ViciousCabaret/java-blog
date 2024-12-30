@@ -11,9 +11,4 @@ abstract public class AbstractController
     ) {
         this.authenticationService = authenticationService;
     }
-
-//    protected User getUser(HttpServletRequest request)
-//    {
-//        return this.authenticationService.authenticate();
-//    }
 }

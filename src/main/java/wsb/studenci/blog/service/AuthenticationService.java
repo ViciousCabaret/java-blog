@@ -3,12 +3,10 @@ package wsb.studenci.blog.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import wsb.studenci.blog.exception.InvalidCredentialsException;
-import wsb.studenci.blog.exception.UserAlreadyExistsException;
+import wsb.studenci.blog.exception.UnauthorizedException;
 import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.repository.UserRepository;
-import wsb.studenci.blog.util.PBKDF2PasswordHasher;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,21 +26,26 @@ public class AuthenticationService {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public User authenticate(String token)
+    public User authenticate()
     {
         try {
-            System.out.println(this.httpServletRequest.getRemoteAddr());
+            String token = this.httpServletRequest.getHeader("Authorization");
+
+            if (null == token) {
+                throw new UnauthorizedException();
+            }
+
             Map<String, String> map = this.tokenService.decode(token);
             Integer userId = Integer.valueOf(map.get("userId"));
 
             Optional<User> user = this.userRepository.findById(userId);
             if (user.isEmpty()) {
-                throw new InvalidCredentialsException();
+                throw new UnauthorizedException();
             }
 
             return user.get();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UnauthorizedException();
         }
     }
 }

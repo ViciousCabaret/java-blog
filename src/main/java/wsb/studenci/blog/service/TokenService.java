@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ abstract public class TokenService
 
         DecodedJWT jwt = verifier.verify(token);
 
-        String payload = jwt.getPayload();
+        String payload = new String(Base64.getDecoder().decode(jwt.getPayload()));
         JSONObject jsonObject = new JSONObject(payload);
 
         HashMap<String, String> map = new HashMap<>();
