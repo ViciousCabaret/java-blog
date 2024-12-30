@@ -1,7 +1,7 @@
 package wsb.studenci.blog.service;
 
 import org.springframework.stereotype.Service;
-import wsb.studenci.blog.exception.InvalidCredentialsException;
+import wsb.studenci.blog.exception.auth.InvalidCredentialsException;
 import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.repository.UserRepository;
 import wsb.studenci.blog.util.PBKDF2PasswordHasher;

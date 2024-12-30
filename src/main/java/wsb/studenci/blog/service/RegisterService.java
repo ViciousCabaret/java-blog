@@ -1,8 +1,7 @@
 package wsb.studenci.blog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import wsb.studenci.blog.exception.UserAlreadyExistsException;
+import wsb.studenci.blog.exception.user.UserAlreadyExistsException;
 import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.repository.UserRepository;
 import wsb.studenci.blog.util.PBKDF2PasswordHasher;

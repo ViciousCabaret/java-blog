@@ -29,7 +29,7 @@ public class AccessTokenService extends TokenService
     public String create(User user, Map<String, String> payload)
     {
         payload.put("type", "access");
-        payload.put("userId", user.id().toString());
+        payload.put("userId", user.getId().toString());
 
         return super.create(payload);
     }

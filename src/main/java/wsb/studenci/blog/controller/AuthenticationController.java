@@ -17,7 +17,6 @@ import wsb.studenci.blog.service.AccessTokenService;
 import wsb.studenci.blog.service.AuthenticationService;
 import wsb.studenci.blog.service.LoginService;
 import wsb.studenci.blog.service.RegisterService;
-import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
 
 import java.util.HashMap;
 
@@ -65,7 +64,7 @@ public class AuthenticationController extends AbstractController
 
     @PostMapping(path = "/register")
     @ResponseBody
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterPostRequest registerPostRequest)
+    public ResponseEntity register(@RequestBody RegisterPostRequest registerPostRequest)
     {
         User user = this.registerService.register(
             registerPostRequest.getLogin(),
@@ -76,9 +75,6 @@ public class AuthenticationController extends AbstractController
 
         RegisterResponse response = new RegisterResponse(token);
 
-        return new ResponseEntity<>(
-            response,
-            HttpStatus.OK
-        );
+        return ResponseEntity.noContent().build();
     }
 }

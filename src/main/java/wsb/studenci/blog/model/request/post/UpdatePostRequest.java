@@ -1,19 +1,30 @@
 package wsb.studenci.blog.model.request.post;
 
-public class UpdatePostRequest {
-    private String title;
-    private String content;
+public class UpdatePostRequest
+{
+    private final String title;
+    private final String content;
+    private final Boolean active;
 
-    public UpdatePostRequest(String title, String content) {
+    public UpdatePostRequest(String title, String content, Boolean active)
+    {
         this.title = title;
         this.content = content;
+        this.active = active;
     }
 
-    public String getTitle() {
+    public String title()
+    {
         return title;
     }
 
-    public String getContent() {
+    public String content()
+    {
         return content;
+    }
+
+    public Boolean active()
+    {
+        return active;
     }
 }

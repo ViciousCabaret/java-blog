@@ -5,69 +5,113 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import wsb.studenci.blog.exception.ForbiddenException;
+import wsb.studenci.blog.exception.post.PostNotFoundException;
 import wsb.studenci.blog.model.Post;
+import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.model.request.post.CreatePostRequest;
+import wsb.studenci.blog.model.request.post.UpdatePostRequest;
 import wsb.studenci.blog.repository.PostRepository;
+import wsb.studenci.blog.service.AuthenticationService;
+import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
+
+import java.util.Optional;
 
 @Controller
-@RequestMapping(path="/posts")
-public class PostController {
+@RequestMapping(path = "/posts")
+public class PostController extends AbstractController
+{
     private @Autowired PostRepository postRepository;
 
+    public PostController(
+        AuthenticationService authenticationService
+    ) {
+        super(authenticationService);
+    }
+
+//    @RequireAuthentication
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Post> create(@RequestBody CreatePostRequest request) {
-        Post post = new Post();
-        post.setTitle(request.getTitle());
-        post.setContent(request.getContent());
+    public ResponseEntity<Post> create(@RequestBody CreatePostRequest request)
+    {
+        User user = this.authenticationService.authenticate();
+        Post post = new Post(
+            user,
+            request.title(),
+            request.content(),
+            request.active()
+        );
+
         postRepository.save(post);
 
         return new ResponseEntity<>(
-                post,
-                HttpStatus.CREATED
+            post,
+            HttpStatus.CREATED
         );
     }
 
+    @RequireAuthentication
     @GetMapping
     @ResponseBody
-    public ResponseEntity<Iterable<Post>> index() {
+    public ResponseEntity<Iterable<Post>> index()
+    {
+        User user = this.authenticationService.authenticate();
+
         return new ResponseEntity<>(
-                postRepository.findAll(),
-                HttpStatus.OK
+            postRepository.findAllByAuthor(user),
+            HttpStatus.OK
         );
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Post> show(@PathVariable Integer id) {
+    public ResponseEntity<Post> show(@PathVariable Integer id)
+    {
         return postRepository.findById(id)
-                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @RequireAuthentication
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id)
+    {
         return postRepository.findById(id)
-                .map(post -> {
-                    postRepository.delete(post);
+            .map(post -> {
+                postRepository.delete(post);
 
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                })
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            })
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PatchMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Post> update(@PathVariable Integer id, @RequestBody CreatePostRequest request) {
-        return postRepository.findById(id)
-                .map(post -> {
-                    post.setTitle(request.getTitle());
-                    post.setContent(request.getContent());
-                    postRepository.save(post);
+    public ResponseEntity<Post> update(@PathVariable Integer id, @RequestBody UpdatePostRequest request)
+    {
+        Optional<Post> optionalPost = this.postRepository.findById(id);
+        User user = this.authenticationService.authenticate();
 
-                    return new ResponseEntity<>(post, HttpStatus.OK);
-                })
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (optionalPost.isEmpty()) {
+            throw new PostNotFoundException();
+        }
+
+        Post post = optionalPost.get();
+
+        if (post.getAuthor().equals(user)) {
+            throw new ForbiddenException();
+        }
+
+        post.setTitle(request.title());
+        post.setContent(request.content());
+        post.setActive(request.active());
+
+        postRepository.save(post);
+
+        return new ResponseEntity<>(
+            post,
+            HttpStatus.OK
+        );
     }
 }

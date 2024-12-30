@@ -2,8 +2,7 @@ package wsb.studenci.blog.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
-import wsb.studenci.blog.exception.InvalidCredentialsException;
-import wsb.studenci.blog.exception.UnauthorizedException;
+import wsb.studenci.blog.exception.auth.UnauthorizedException;
 import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.repository.UserRepository;
 

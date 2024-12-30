@@ -19,11 +19,7 @@ public class User
     @Column(name = "password", nullable = false)
     private String password;
 
-    public User(
-        String login,
-        byte[] salt,
-        String password
-    )
+    public User(String login, byte[] salt, String password)
     {
         this.login = login;
         this.salt = salt;
@@ -34,12 +30,12 @@ public class User
     {
     }
 
-    public Integer id()
+    public Integer getId()
     {
         return id;
     }
 
-    public String login()
+    public String getLogin()
     {
         return login;
     }

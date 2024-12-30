@@ -1,19 +1,29 @@
 package wsb.studenci.blog.model.request.post;
 
 public class CreatePostRequest {
-    private String title;
-    private String content;
+    private final String title;
+    private final String content;
+    private final Boolean active;
 
-    public CreatePostRequest(String title, String content) {
+    public CreatePostRequest(String title, String content, Boolean active)
+    {
         this.title = title;
         this.content = content;
+        this.active = active;
     }
 
-    public String getTitle() {
+    public String title()
+    {
         return title;
     }
 
-    public String getContent() {
+    public String content()
+    {
         return content;
+    }
+
+    public Boolean active()
+    {
+        return active;
     }
 }
