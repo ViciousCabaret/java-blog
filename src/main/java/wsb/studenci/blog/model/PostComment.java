@@ -2,10 +2,11 @@ package wsb.studenci.blog.model;
 
 import jakarta.persistence.*;
 
+@Entity
 public class PostComment
 {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer Id;
 
     @ManyToOne
@@ -23,7 +24,9 @@ public class PostComment
         this.content = content;
     }
 
-    public PostComment(){};
+    public PostComment()
+    {
+    }
 
     public Integer getId()
     {
