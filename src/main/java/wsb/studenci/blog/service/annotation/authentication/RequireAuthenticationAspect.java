@@ -4,6 +4,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import wsb.studenci.blog.exception.auth.UnauthorizedException;
 import wsb.studenci.blog.service.AuthenticationService;
 
 @Aspect
@@ -19,8 +20,10 @@ public class RequireAuthenticationAspect
     }
 
     @Around("@annotation(RequireAuthentication)")
-    public void requireAuthentication(ProceedingJoinPoint proceedingJoinPoint) throws RuntimeException
+    public Object requireAuthentication(ProceedingJoinPoint proceedingJoinPoint) throws Throwable
     {
         this.authenticationService.authenticate();
+
+        return proceedingJoinPoint.proceed();
     }
 }

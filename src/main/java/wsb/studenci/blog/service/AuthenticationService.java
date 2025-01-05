@@ -25,7 +25,7 @@ public class AuthenticationService {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public User authenticate()
+    public User authenticate() throws UnauthorizedException
     {
         try {
             String token = this.httpServletRequest.getHeader("Authorization");
