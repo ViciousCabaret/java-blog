@@ -17,7 +17,7 @@ import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/post/comment")
+@RequestMapping("/post-comments")
 public class PostCommentController extends AbstractController
 {
     private final PostCommentRepository postCommentRepository;
