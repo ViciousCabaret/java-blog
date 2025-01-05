@@ -63,6 +63,16 @@ public class PostController extends AbstractController
         );
     }
 
+    @GetMapping("/all")
+    @ResponseBody
+    public ResponseEntity<Iterable<Post>> all()
+    {
+        return new ResponseEntity<>(
+            postRepository.findAll(),
+            HttpStatus.OK
+        );
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Post> show(@PathVariable Integer id)
