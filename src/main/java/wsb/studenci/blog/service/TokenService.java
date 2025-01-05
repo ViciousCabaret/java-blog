@@ -5,8 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.Date;
@@ -21,14 +19,11 @@ abstract public class TokenService
     public String create(Map<String, String> payload)
     {
         Algorithm algorithm = Algorithm.HMAC256(this.getSecret());
-        String token = JWT.create()
+        return JWT.create()
             .withPayload(payload)
             .withIssuer("auth0")
             .withExpiresAt(this.getExpirationDate())
             .sign(algorithm);
-
-        System.out.println(token);
-        return token;
     }
 
     public Map<String, String> decode(String token)

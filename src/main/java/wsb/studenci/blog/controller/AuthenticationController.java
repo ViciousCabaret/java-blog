@@ -53,7 +53,8 @@ public class AuthenticationController extends AbstractController
         String token = this.accessTokenService.create(user, new HashMap<>());
 
         LoginResponse response = new LoginResponse(
-            token
+            token,
+            user
         );
 
         return new ResponseEntity<>(

@@ -50,15 +50,19 @@ public class PostController extends AbstractController
         );
     }
 
-    @RequireAuthentication
     @GetMapping
     @ResponseBody
-    public ResponseEntity<Iterable<Post>> index()
+    public ResponseEntity<Iterable<Post>> index(@RequestParam(required = false) Integer authorId)
     {
-        User user = this.authenticationService.authenticate();
+        if (authorId == null) {
+            return new ResponseEntity<>(
+                postRepository.findAll(),
+                HttpStatus.OK
+            );
+        }
 
         return new ResponseEntity<>(
-            postRepository.findAllByAuthor(user),
+            postRepository.findAllByAuthor(authorId),
             HttpStatus.OK
         );
     }

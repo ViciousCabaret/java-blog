@@ -26,8 +26,6 @@ public class AccessTokenService extends TokenService
 
     protected Date getExpirationDate()
     {
-        Date date = new Date();
-        System.out.println(date);
         return new Date(System.currentTimeMillis() + Integer.parseInt(this.jwtTokenLifespan) * 1000 * 60 * 60);
     }
 
