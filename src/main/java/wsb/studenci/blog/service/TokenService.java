@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 abstract public class TokenService
 {
-//    @Value("${auth.app.secret}")
-//    private String secret;
-
     abstract protected String getSecret();
+    abstract protected Date getExpirationDate();
 
     public String create(Map<String, String> payload)
     {
@@ -25,6 +24,7 @@ abstract public class TokenService
         String token = JWT.create()
             .withPayload(payload)
             .withIssuer("auth0")
+            .withExpiresAt(this.getExpirationDate())
             .sign(algorithm);
 
         System.out.println(token);

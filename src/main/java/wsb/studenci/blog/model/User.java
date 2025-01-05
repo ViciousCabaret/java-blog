@@ -49,4 +49,9 @@ public class User
     {
         return salt;
     }
+
+    public void changePassword(String password)
+    {
+        this.password = password;
+    }
 }

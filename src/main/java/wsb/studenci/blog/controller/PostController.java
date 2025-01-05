@@ -29,7 +29,7 @@ public class PostController extends AbstractController
         super(authenticationService);
     }
 
-//    @RequireAuthentication
+    @RequireAuthentication
     @PostMapping
     @ResponseBody
     public ResponseEntity<Post> create(@RequestBody CreatePostRequest request)
