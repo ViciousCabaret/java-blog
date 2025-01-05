@@ -54,6 +54,4 @@ public class PostCommentController extends AbstractController
 
         return ResponseEntity.ok(postComment);
     }
-
-    public ResponseEntity
 }
