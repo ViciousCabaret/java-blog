@@ -2,13 +2,13 @@ package wsb.studenci.blog.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import wsb.studenci.blog.exception.post.PostNotFoundException;
+import wsb.studenci.blog.exception.postcomment.PostCommentNotFoundException;
 import wsb.studenci.blog.model.Post;
 import wsb.studenci.blog.model.PostComment;
-import wsb.studenci.blog.model.request.comment.CreatePostCommentRequest;
+import wsb.studenci.blog.model.request.postcomment.CreatePostCommentRequest;
+import wsb.studenci.blog.model.request.postcomment.EditPostCommentRequest;
 import wsb.studenci.blog.repository.PostCommentRepository;
 import wsb.studenci.blog.repository.PostRepository;
 import wsb.studenci.blog.service.AuthenticationService;
@@ -17,7 +17,7 @@ import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/post/comment")
+@RequestMapping("/post-comment")
 public class PostCommentController extends AbstractController
 {
     private final PostCommentRepository postCommentRepository;
@@ -36,7 +36,7 @@ public class PostCommentController extends AbstractController
     @RequireAuthentication
     @PostMapping
     @ResponseBody
-    public ResponseEntity<PostComment> create(CreatePostCommentRequest request)
+    public ResponseEntity<PostComment> create(@RequestBody CreatePostCommentRequest request)
     {
         Optional<Post> post = this.postRepository.findById(request.getPostId());
 
@@ -49,6 +49,30 @@ public class PostCommentController extends AbstractController
             post.get(),
             request.getContent()
         );
+
+        this.postCommentRepository.save(postComment);
+
+        return ResponseEntity.ok(postComment);
+    }
+
+    @RequireAuthentication
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<PostComment> edit(@RequestBody EditPostCommentRequest request, @PathVariable Integer id)
+    {
+        Optional<Post> post = this.postRepository.findById(request.getPostId());
+
+        if (post.isEmpty()) {
+            throw new PostNotFoundException();
+        }
+
+        Optional<PostComment> optionalPostComment = this.postCommentRepository.findById(id);
+        if (optionalPostComment.isEmpty()) {
+            throw new PostCommentNotFoundException();
+        }
+
+        PostComment postComment = optionalPostComment.get();
+        postComment.setContent(request.getContent());
 
         this.postCommentRepository.save(postComment);
 

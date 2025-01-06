@@ -7,26 +7,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import wsb.studenci.blog.exception.ForbiddenException;
 import wsb.studenci.blog.exception.post.PostNotFoundException;
+import wsb.studenci.blog.exception.user.UserNotFoundException;
 import wsb.studenci.blog.model.Post;
 import wsb.studenci.blog.model.User;
 import wsb.studenci.blog.model.request.post.CreatePostRequest;
 import wsb.studenci.blog.model.request.post.UpdatePostRequest;
 import wsb.studenci.blog.repository.PostRepository;
+import wsb.studenci.blog.repository.UserRepository;
 import wsb.studenci.blog.service.AuthenticationService;
 import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/posts")
 public class PostController extends AbstractController
 {
-    private @Autowired PostRepository postRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public PostController(
-        AuthenticationService authenticationService
+        AuthenticationService authenticationService,
+        PostRepository postRepository,
+        UserRepository userRepository
     ) {
         super(authenticationService);
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @RequireAuthentication
@@ -61,8 +69,14 @@ public class PostController extends AbstractController
             );
         }
 
+        Optional<User> optionalAuthor = this.userRepository.findById(authorId);
+
+        if (optionalAuthor.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
         return new ResponseEntity<>(
-            postRepository.findAllByAuthor(authorId),
+            postRepository.findAllByAuthor(optionalAuthor.get()),
             HttpStatus.OK
         );
     }

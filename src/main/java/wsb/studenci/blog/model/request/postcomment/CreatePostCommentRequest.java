@@ -1,4 +1,4 @@
-package wsb.studenci.blog.model.request.comment;
+package wsb.studenci.blog.model.request.postcomment;
 
 public class CreatePostCommentRequest
 {
