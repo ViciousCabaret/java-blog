@@ -38,6 +38,7 @@ public class AuthenticationService {
             Integer userId = Integer.valueOf(map.get("userId"));
 
             Optional<User> user = this.userRepository.findById(userId);
+
             if (user.isEmpty()) {
                 throw new UnauthorizedException();
             }

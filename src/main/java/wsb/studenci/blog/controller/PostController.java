@@ -1,6 +1,4 @@
 package wsb.studenci.blog.controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +15,6 @@ import wsb.studenci.blog.repository.UserRepository;
 import wsb.studenci.blog.service.AuthenticationService;
 import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Optional;
 
 @Controller
@@ -107,13 +104,18 @@ public class PostController extends AbstractController
     {
         return postRepository.findById(id)
             .map(post -> {
-                postRepository.delete(post);
+                User user = this.authenticationService.authenticate();
+                if (!post.getAuthor().equals(user)) {
+                    throw new ForbiddenException();
+                }
+                    postRepository.delete(post);
 
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             })
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @RequireAuthentication
     @PatchMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Post> update(@PathVariable Integer id, @RequestBody UpdatePostRequest request)
