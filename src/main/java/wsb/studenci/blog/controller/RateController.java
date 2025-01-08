@@ -14,6 +14,7 @@ import wsb.studenci.blog.model.request.rate.DeleteRatePostModel;
 import wsb.studenci.blog.repository.PostRepository;
 import wsb.studenci.blog.repository.RateRepository;
 import wsb.studenci.blog.service.AuthenticationService;
+import wsb.studenci.blog.service.RateService;
 import wsb.studenci.blog.service.annotation.authentication.RequireAuthentication;
 
 import java.util.Optional;
@@ -23,17 +24,20 @@ import java.util.Optional;
 public class RateController
 {
     private final RateRepository rateRepository;
+    private final RateService rateService;
     private final PostRepository postRepository;
     private final AuthenticationService authenticationService;
 
     public RateController(
         RateRepository rateRepository,
         PostRepository postRepository,
-        AuthenticationService authenticationService
+        AuthenticationService authenticationService,
+        RateService rateService
     ) {
         this.rateRepository = rateRepository;
         this.postRepository = postRepository;
         this.authenticationService = authenticationService;
+        this.rateService = rateService;
     }
 
 
@@ -65,6 +69,8 @@ public class RateController
 
         this.rateRepository.save(rate);
 
+        this.rateService.recalculatePostRating(optionalPost.get());
+
         return new ResponseEntity<>(rate, HttpStatus.OK);
     }
 
@@ -86,6 +92,7 @@ public class RateController
         }
 
         this.rateRepository.delete(optionalRate.get());
+        this.rateService.recalculatePostRating(optionalPost.get());
 
         return ResponseEntity.noContent().build();
     }

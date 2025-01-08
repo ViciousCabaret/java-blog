@@ -18,6 +18,9 @@ public class Post {
 
     private Boolean active;
 
+    @Column(columnDefinition = "float default 0.0")
+    private Float rate;
+
     public Post(
         User author,
         String title,
@@ -28,6 +31,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.active = active;
+        this.rate = 0.0f;
     }
 
     public Post()
@@ -72,5 +76,15 @@ public class Post {
     public void setActive(Boolean active)
     {
         this.active = active;
+    }
+
+    public Float getRate()
+    {
+        return rate;
+    }
+
+    public void setRate(Float rate)
+    {
+        this.rate = rate;
     }
 }

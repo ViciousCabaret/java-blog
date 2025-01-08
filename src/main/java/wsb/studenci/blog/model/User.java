@@ -19,6 +19,10 @@ public class User
     @Column(name = "password", nullable = false)
     private String password;
 
+    private String name;
+    private String surname;
+    private String bio;
+
     public User(String login, byte[] salt, String password)
     {
         this.login = login;
@@ -53,5 +57,40 @@ public class User
     public void changePassword(String password)
     {
         this.password = password;
+    }
+
+    public void setLogin(String login)
+    {
+        this.login = login;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getSurname()
+    {
+        return surname;
+    }
+
+    public void setSurname(String surname)
+    {
+        this.surname = surname;
+    }
+
+    public String getBio()
+    {
+        return bio;
+    }
+
+    public void setBio(String bio)
+    {
+        this.bio = bio;
     }
 }
