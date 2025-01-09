@@ -129,7 +129,7 @@ public class PostController extends AbstractController
 
         Post post = optionalPost.get();
 
-        if (post.getAuthor().equals(user)) {
+        if (!post.getAuthor().getId().equals(user.getId())) {
             throw new ForbiddenException();
         }
 

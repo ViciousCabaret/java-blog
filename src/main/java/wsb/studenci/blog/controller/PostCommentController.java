@@ -36,6 +36,22 @@ public class PostCommentController extends AbstractController
         this.postRepository = postRepository;
     }
 
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<Iterable<PostComment>> index(@RequestParam() Integer postId)
+    {
+        Optional<Post> post = this.postRepository.findById(postId);
+
+        if (post.isEmpty()) {
+            throw new PostNotFoundException();
+        }
+
+        return new ResponseEntity<>(
+                postCommentRepository.findAllByPost(post.get()),
+                HttpStatus.OK
+        );
+    }
+
     @RequireAuthentication
     @PostMapping
     @ResponseBody
