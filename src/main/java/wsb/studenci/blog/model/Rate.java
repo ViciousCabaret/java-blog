@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 @Entity
 public class Rate
 {
+    public static final Integer MIN_RATE = 1;
+    public static final Integer MAX_RATE = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer Id;
@@ -65,6 +68,10 @@ public class Rate
 
     public void setScore(Integer score)
     {
+        if (score < MIN_RATE || score > MAX_RATE) {
+            throw new IllegalArgumentException("score must be between 1 and 5");
+        }
+
         this.score = score;
     }
 }
