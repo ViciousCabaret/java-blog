@@ -25,10 +25,10 @@ public class Post {
     private Float rate;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private Set<PostComment> postComments = new LinkedHashSet<PostComment>();
+    private Set<PostComment> postComments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private Set<Rate> rates = new LinkedHashSet<Rate>();
+    private Set<Rate> rates = new LinkedHashSet<>();
 
     public Post(
         User author,
@@ -95,21 +95,5 @@ public class Post {
     public void setRate(Float rate)
     {
         this.rate = rate;
-    }
-
-    public Set<PostComment> getPostComments() {
-        return postComments;
-    }
-
-    public void setPostComments(Set<PostComment> postComments) {
-        this.postComments = postComments;
-    }
-
-    public Set<Rate> getRates() {
-        return rates;
-    }
-
-    public void setRates(Set<Rate> rates) {
-        this.rates = rates;
     }
 }
