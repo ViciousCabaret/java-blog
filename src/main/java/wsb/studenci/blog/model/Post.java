@@ -2,6 +2,9 @@ package wsb.studenci.blog.model;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 public class Post {
     @Id
@@ -20,6 +23,12 @@ public class Post {
 
     @Column(columnDefinition = "float default 0.0")
     private Float rate;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private Set<PostComment> postComments = new LinkedHashSet<PostComment>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private Set<Rate> rates = new LinkedHashSet<Rate>();
 
     public Post(
         User author,
@@ -86,5 +95,21 @@ public class Post {
     public void setRate(Float rate)
     {
         this.rate = rate;
+    }
+
+    public Set<PostComment> getPostComments() {
+        return postComments;
+    }
+
+    public void setPostComments(Set<PostComment> postComments) {
+        this.postComments = postComments;
+    }
+
+    public Set<Rate> getRates() {
+        return rates;
+    }
+
+    public void setRates(Set<Rate> rates) {
+        this.rates = rates;
     }
 }
