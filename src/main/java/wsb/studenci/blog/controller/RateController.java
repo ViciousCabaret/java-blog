@@ -62,6 +62,8 @@ public class RateController
             );
 
             this.rateRepository.save(rate);
+            this.rateService.recalculatePostRating(optionalPost.get());
+
             return new ResponseEntity<>(rate, HttpStatus.CREATED);
         }
         Rate rate = optionalRate.get();
